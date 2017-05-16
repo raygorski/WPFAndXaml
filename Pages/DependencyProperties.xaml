@@ -1,0 +1,32 @@
+﻿<Page x:Class="UsingMVVMLight.Pages.DependencyProperties"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UsingMVVMLight.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="DependencyProperties">
+
+    <Grid>
+		<TextBlock x:Name="textBlock" Height="91.2" Margin="32.133,25.733,23.6,0" TextWrapping="Wrap" 
+							 VerticalAlignment="Top"
+							 Text="Dependency Properties.  Here we are using a button. The Button class inherits from DependencyObject.
+							 IsMouseOver is a dependency property...depending on the cursor?" RenderTransformOrigin="0.5,0.5" 
+							 />
+		<Button x:Name="button" Content="Dependency Property" Height="37.6" Margin="72.2,0,66.2,82" VerticalAlignment="Bottom">
+			<Button.Style>
+				<Style TargetType="{x:Type Button}">
+					<Style.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Foreground" Value="Fuchsia"/>
+						</Trigger>
+					</Style.Triggers>
+					
+				</Style>
+			</Button.Style>
+		</Button>
+
+
+	</Grid>
+</Page>

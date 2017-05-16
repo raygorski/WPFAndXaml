@@ -1,0 +1,117 @@
+﻿<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			xmlns:f="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+			xmlns:Custom="http://www.galasoft.ch/mvvmlight" 
+			xmlns:local="clr-namespace:UsingMVVMLight.Pages"
+      xmlns:vm ="clr-namespace:UsingMVVMLight.ViewModel" 
+			xmlns:val="clr-namespace:UsingMVVMLight.Validators"
+			x:Class="UsingMVVMLight.Pages.MyGrepToy" 
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="500"
+      Title="MyGrepToy" Loaded="Page_Loaded">
+	<Page.Resources>
+		<val:ValidationErrorsToStringConverter x:Key="EtoMConverter" />
+		<val:InverseAndBooleansToBooleanConverter x:Key="InverseBoolConverter" />
+	</Page.Resources>
+
+	<DockPanel LastChildFill="True"
+						 DataContext="{Binding GrepToyViewModel, Source={StaticResource Locator}}">
+		<DockPanel DockPanel.Dock="Top">
+			<Grid HorizontalAlignment="Center">
+				<Grid.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="HorizontalAlignment" Value="Right"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+					</Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Margin" Value=" 5" />
+					</Style>
+				</Grid.Resources>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="125"/>
+					<ColumnDefinition Width="225"/>
+					<ColumnDefinition Width="50"/>
+				</Grid.ColumnDefinitions>
+
+				<Label Content="Directory To Search" Grid.Row="0" Grid.Column="0"/>
+				<TextBox x:Name="SearchDirBox" Grid.Row="0" Grid.Column="1" Width="200" Height="20">
+					<!--Text="{Binding SearchDirectory, UpdateSourceTrigger=PropertyChanged}"/>--> <!-- this example is used for simple binding.  Since we added some Validation rules, the binding became complex and we need to use Element Binding instead of attibute binding -->
+					<TextBox.Text>
+						<Binding Path="SearchDirectory" UpdateSourceTrigger="PropertyChanged">  <!-- The 'SearchDirectory here is actually bindind to to underlying viewModel property SearchDirectory -->
+							<Binding.ValidationRules>
+								<val:ValidateTextRequired />
+							</Binding.ValidationRules>
+						</Binding>
+					</TextBox.Text>
+				</TextBox>
+				<TextBlock Margin="65,2,30,2" Foreground="Red" FontWeight="Bold" Grid.Column="1" Grid.Row="0"
+									 Text="{Binding ElementName=SearchDirBox,
+															Path=(Validation.Errors),
+															Converter={StaticResource EtoMConverter}}" 
+									 />
+
+				<Button Grid.Row="0" Grid.Column="2" Width="20" Height="15"
+								Command="{Binding GetFolderBrowserCommand}"	>
+					<TextBlock><Run FontSize="8" BaselineAlignment="Superscript" Text=". . ."/></TextBlock>
+				</Button>
+
+				<Label Content="Search String" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"/>
+				<TextBox x:Name="SearchStringBox" Grid.Row="1" Grid.Column="1" Width="200" Height="20">
+					<TextBox.Text>
+						<Binding Path="SearchString" UpdateSourceTrigger="PropertyChanged">
+							<Binding.ValidationRules>
+								<val:ValidateTextRequired/>
+							</Binding.ValidationRules>
+						</Binding>
+					</TextBox.Text>
+				</TextBox>
+				<TextBlock Margin="65,2,30,2" Foreground="Red" FontWeight="Bold" Grid.Column="1" Grid.Row="1"
+									 ToolTip="{Binding ElementName=SearchStringBox,
+															Path=(Validation.Errors),
+															Converter={StaticResource EtoMConverter}}" 
+									 />
+
+				<Label Content="File Type Suffix" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right"/>
+				<TextBox x:Name="FileExtensionBox" Grid.Row="2" Grid.Column="1" Width="200" Height="20">
+								 <!--Text="{Binding FileExtension}"/>-->
+					<TextBox.Text>
+						<Binding Path="FileExtension" UpdateSourceTrigger="PropertyChanged">
+							<Binding.ValidationRules>
+								<val:ValidateTextRequired/>
+							</Binding.ValidationRules>
+						</Binding>
+					</TextBox.Text>
+				</TextBox>
+				<TextBlock Margin="65,2,30,2" Foreground="Red" FontWeight="Bold" Grid.Column="1" Grid.Row="2"
+									 ToolTip="{Binding ElementName=FileExtensionBox,
+															Path=(Validation.Errors),
+															Converter={StaticResource EtoMConverter}}" 
+									 />
+
+				<Button Content="_Find Files!" Grid.Row="3" Grid.ColumnSpan="3" Width="150" 
+								Command="{Binding SearchDirectoryCommand}">
+					<Button.IsEnabled>
+						<MultiBinding Converter="{StaticResource InverseBoolConverter}" Mode="TwoWay">
+							<Binding ElementName="SearchDirBox" Path="(Validation.HasError)"/>
+							<Binding ElementName="SearchStringBox" Path="(Validation.HasError)"/>
+							<Binding ElementName="FileExtensionBox" Path="(Validation.HasError)"/>
+						</MultiBinding>
+					</Button.IsEnabled>
+				</Button>
+
+			</Grid>
+		</DockPanel>
+		<Border  CornerRadius="10" />
+		<ListView DockPanel.Dock="Bottom" 
+							ItemsSource="{Binding SearchResults}"/>
+	</DockPanel>
+</Page>

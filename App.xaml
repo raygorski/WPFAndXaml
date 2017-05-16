@@ -1,0 +1,22 @@
+﻿<Application x:Class="UsingMVVMLight.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:UsingMVVMLight"
+             xmlns:vm="clr-namespace:UsingMVVMLight.ViewModel"
+             StartupUri="MainWindow.xaml"
+						 >
+  <Application.Resources>
+		<vm:ViewModelLocator x:Key="Locator" />
+		<Style TargetType="TextBlock" x:Key="MyBlueTextBoxStyle">
+			<Setter Property="Foreground" Value="Blue" />
+			<Setter Property="FontWeight" Value="Bold" />
+		</Style>
+
+		<Style TargetType="TextBlock" x:Key="MyIndianRedTextBoxStyle">
+			<Setter Property="Foreground" Value="IndianRed" />
+			<Setter Property="FontWeight" Value="UltraBold" />
+			<Setter Property="FontFamily" Value="Bookman" />
+		</Style>
+
+	</Application.Resources>
+</Application>
