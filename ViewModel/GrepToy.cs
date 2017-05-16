@@ -28,7 +28,7 @@
 		#region Methods
 		private void GetFolderBrowserMethod()
 		{
-			using (var dlg = new FolderBrowserDialog() { SelectedPath = @"C:\Downloads\MyDocs\Workspace\MPC" })
+			using (var dlg = new FolderBrowserDialog() { SelectedPath = @"C:\" })
 			{
 				SearchDirectory = (dlg.ShowDialog() == DialogResult.OK) ? dlg.SelectedPath : string.Empty;
 			}
